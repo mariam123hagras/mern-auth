@@ -10,21 +10,21 @@ export const  AppContextProvider=(props)=>{
    const [userData,setUserData]=useState(null)
    axios.defaults.withCredentials=true
 
-   const getAuthState=async()=>{
-   try {
+//    const getAuthState=async()=>{
+//    try {
 
-    const {data} =await axios.get(backendUrl+'/api/auth/is-auth')
+//     const {data} =await axios.get(backendUrl+'/api/auth/is-auth')
     
-    if(data.success){
-        setIsLoggedin(true)
+//     if(data.success){
+//         setIsLoggedin(true)
        
-        getUserData()
-    }
+//         getUserData()
+//     }
     
-     } catch (error) {
-     toast.error(error.message)
-       }
-   }
+//      } catch (error) {
+//      toast.error(error.message)
+//        }
+//    }
 
    const getUserData=async()=>{
     try {
@@ -38,8 +38,7 @@ export const  AppContextProvider=(props)=>{
    }
 
    useEffect(()=>{
-  getAuthState()
-  getUserData()
+  
    },[])
 
 

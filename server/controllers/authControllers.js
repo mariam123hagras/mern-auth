@@ -156,20 +156,20 @@ export const verifyEmail=async(req,res)=>{
 }
 
 //check if user is authenticated
-export const isAuthenticated=async(req,res)=>{
-   const { userId } = req.user;
+// export const isAuthenticated=async(req,res)=>{
+//    const { userId } = req.user;
    
-  try {
-      if(userId){
-        return res.json({success:true,message:'User is authenticated'});
-      }
+//   try {
+//       if(userId){
+//         return res.json({success:true,message:'User is authenticated'});
+//       }
      
   
-  } catch (error) {
-    res.json({success:false,message:error.message});
-  }
+//   } catch (error) {
+//     res.json({success:false,message:error.message});
+//   }
 
-}
+// }
 
 // Send password reset OTP to user email
 
