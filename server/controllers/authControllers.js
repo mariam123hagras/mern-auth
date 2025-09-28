@@ -203,10 +203,72 @@ try {
 }
 }
 
+// verify reset-otp
+export const verifyResetOtp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  console.log('=== OTP VERIFICATION DEBUG ===');
+  console.log('Email:', email);
+  console.log('Received OTP:', otp, 'Type:', typeof otp);
+
+  if (!email || !otp) {
+    console.log('Missing email or OTP');
+    return res.json({ success: false, message: 'Email and OTP are required' });
+  }
+
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      console.log('User not found for email:', email);
+      return res.json({ success: false, message: 'User not found' });
+    }
+
+    console.log('User found - Stored OTP:', user.resetOtp, 'Type:', typeof user.resetOtp);
+    console.log('OTP Expiry:', new Date(user.resetOtpExpireAt));
+    console.log('Current time:', new Date());
+    console.log('Is OTP expired?', user.resetOtpExpireAt < Date.now());
+
+    // Check if OTP exists and is not empty
+    if (!user.resetOtp || user.resetOtp === '') {
+      console.log('No OTP in database or OTP already used');
+      return res.json({ success: false, message: 'No OTP requested or OTP already used. Please request a new OTP.' });
+    }
+
+    // Convert both to string for consistent comparison
+    const storedOtp = String(user.resetOtp).trim();
+    const receivedOtp = String(otp).trim();
+    
+    console.log('Comparing OTPs - Stored:', storedOtp, 'Received:', receivedOtp);
+    console.log('Match result:', storedOtp === receivedOtp);
+
+    // Check if OTP matches
+    if (storedOtp !== receivedOtp) {
+      console.log('OTP mismatch - Invalid OTP');
+      return res.json({ success: false, message: 'Invalid OTP' });
+    }
+
+    // Check if OTP is expired
+    if (user.resetOtpExpireAt < Date.now()) {
+      console.log('OTP has expired');
+      return res.json({ success: false, message: 'OTP has expired. Please request a new OTP.' });
+    }
+
+    console.log('OTP verification successful!');
+    return res.json({ success: true, message: 'OTP verified successfully' });
+
+  } catch (error) {
+    console.error('OTP verification error:', error);
+    return res.json({ success: false, message: error.message });
+  }
+}
+
 //reset user password using otp
 
 export const resetPassword=async(req,res)=>{
   const {email,otp,newPassword}=req.body;
+
+
+  
   if(!email || !otp || !newPassword){
     return res.json({success:false,message:'All fields are required'});
   }
