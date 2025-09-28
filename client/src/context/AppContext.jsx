@@ -37,9 +37,7 @@ export const  AppContextProvider=(props)=>{
     }
    }
 
-   useEffect(()=>{
-  
-   },[])
+
 
 
     const value={
